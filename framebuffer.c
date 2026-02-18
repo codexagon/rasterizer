@@ -15,7 +15,7 @@ void init_framebuffer(fbuf *buf, int bufwidth, int bufheight) {
 	clear_framebuffer(buf);
 }
 
-void draw_pixel(fbuf *buf, int x, int y, u8 r, u8 g, u8 b) {
+void draw_pixel(fbuf *buf, int x, int y, color c) {
 	if (x < 0 || x >= buf->width) {
 		return;
 	}
@@ -23,12 +23,12 @@ void draw_pixel(fbuf *buf, int x, int y, u8 r, u8 g, u8 b) {
 		return;
 	}
 
-	SDL_SetRenderDrawColor(buf->renderer, r, g, b, 255);
+	SDL_SetRenderDrawColor(buf->renderer, c.r, c.g, c.b, 255);
 	SDL_Rect rect = {x * SCALE, y * SCALE, SCALE, SCALE};
 	SDL_RenderFillRect(buf->renderer, &rect);
 }
 
-void draw_line(fbuf *buf, int x1, int y1, int x2, int y2, u8 r, u8 g, u8 b) {
+void draw_line(fbuf *buf, int x1, int y1, int x2, int y2, color c) {
 	int dx = x2 - x1, sx = 1;
 	int dy = y2 - y1, sy = 1;
 
@@ -48,7 +48,7 @@ void draw_line(fbuf *buf, int x1, int y1, int x2, int y2, u8 r, u8 g, u8 b) {
 
 	int x = x1, y = y1;
 	while (1) {
-		draw_pixel(buf, x, y, r, g, b);
+		draw_pixel(buf, x, y, c);
 		if (x == x2 && y == y2)
 			break;
 		if (base == 0) {
