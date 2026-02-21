@@ -1,4 +1,5 @@
 #include "framebuffer.h"
+#include "helper.h"
 
 #define SCALE 10
 
@@ -65,6 +66,29 @@ void draw_line(fbuf *buf, int x1, int y1, int x2, int y2, color c) {
 				x += sx;
 			}
 			e -= parl << 1;
+		}
+	}
+}
+
+void draw_triangle(fbuf *buf, int x1, int y1, int x2, int y2, int x3, int y3, color c) {
+	draw_line(buf, x1, y1, x2, y2, c);
+	draw_line(buf, x2, y2, x3, y3, c);
+	draw_line(buf, x3, y3, x1, y1, c);
+
+	int xbl = min3(x1, x2, x3);
+	int xbm = max3(x1, x2, x3);
+	int ybl = min3(y1, y2, y3);
+	int ybm = max3(y1, y2, y3);
+
+	int d1 = 0, d2 = 0, d3 = 0;
+	for (int row = ybl; row <= ybm; row++) {
+		for (int col = xbl; col <= xbm; col++) {
+			d1 = sign(x1, y1, x2, y2, col, row);
+			d2 = sign(x2, y2, x3, y3, col, row);
+			d3 = sign(x3, y3, x1, y1, col, row);
+			if ((d1 > 0 && d2 > 0 && d3 > 0) || (d1 < 0 && d2 < 0 && d3 < 0)) {
+				draw_pixel(buf, col, row, c);
+			}
 		}
 	}
 }

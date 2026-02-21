@@ -13,12 +13,7 @@ int main() {
 	int ax = 5, ay = 5;
 	int bx = 120, by = 43;
 	int cx = 48, cy = 90;
-	draw_line(&buf, ax, ay, bx, by, red);
-	draw_line(&buf, bx, by, cx, cy, green);
-	draw_line(&buf, cx, cy, ax, ay, blue);
-	draw_pixel(&buf, ax, ay, white);
-	draw_pixel(&buf, bx, by, white);
-	draw_pixel(&buf, cx, cy, white);
+	draw_triangle(&buf, ax, ay, bx, by, cx, cy, green);
 	render(&buf);
 
 	SDL_Event e;

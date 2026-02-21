@@ -16,6 +16,7 @@ typedef struct color {
 void init_framebuffer(fbuf *buf, int bufwidth, int bufheight);
 void draw_pixel(fbuf *buf, int x, int y, color c);
 void draw_line(fbuf *buf, int x1, int y1, int x2, int y2, color c);
+void draw_triangle(fbuf *buf, int x1, int y1, int x2, int y2, int x3, int y3, color c);
 void render(fbuf *buf);
 void clear_framebuffer(fbuf *buf);
 void quit_framebuffer(fbuf *buf);
