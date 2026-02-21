@@ -16,29 +16,29 @@ void init_framebuffer(fbuf *buf, int bufwidth, int bufheight) {
 	clear_framebuffer(buf);
 }
 
-void draw_pixel(fbuf *buf, int x, int y, color c) {
-	if (x < 0 || x >= buf->width) {
+void draw_pixel(fbuf *buf, vertex v, color c) {
+	if (v.x < 0 || v.x >= buf->width) {
 		return;
 	}
-	if (y < 0 || y >= buf->height) {
+	if (v.y < 0 || v.y >= buf->height) {
 		return;
 	}
 
 	SDL_SetRenderDrawColor(buf->renderer, c.r, c.g, c.b, 255);
-	SDL_Rect rect = {x * SCALE, y * SCALE, SCALE, SCALE};
+	SDL_Rect rect = {v.x * SCALE, v.y * SCALE, SCALE, SCALE};
 	SDL_RenderFillRect(buf->renderer, &rect);
 }
 
-void draw_line(fbuf *buf, int x1, int y1, int x2, int y2, color c) {
-	int dx = x2 - x1, sx = 1;
-	int dy = y2 - y1, sy = 1;
+void draw_line(fbuf *buf, vertex v1, vertex v2, color c) {
+	int dx = v2.x - v1.x, sx = 1;
+	int dy = v2.y - v1.y, sy = 1;
 
-	if (x2 < x1) {
-		dx = x1 - x2;
+	if (v2.x < v1.x) {
+		dx = v1.x - v2.x;
 		sx = -1;
 	}
-	if (y2 < y1) {
-		dy = y1 - y2;
+	if (v2.y < v1.y) {
+		dy = v1.y - v2.y;
 		sy = -1;
 	}
 
@@ -47,10 +47,10 @@ void draw_line(fbuf *buf, int x1, int y1, int x2, int y2, color c) {
 	int parl = (dy > dx) ? dy : dx;
 	int perp = (dy > dx) ? dx : dy;
 
-	int x = x1, y = y1;
+	int x = v1.x, y = v1.y;
 	while (1) {
-		draw_pixel(buf, x, y, c);
-		if (x == x2 && y == y2)
+		draw_pixel(buf, (vertex){x, y}, c);
+		if (x == v2.x && y == v2.y)
 			break;
 		if (base == 0) {
 			x += sx;
@@ -70,24 +70,25 @@ void draw_line(fbuf *buf, int x1, int y1, int x2, int y2, color c) {
 	}
 }
 
-void draw_triangle(fbuf *buf, int x1, int y1, int x2, int y2, int x3, int y3, color c) {
-	draw_line(buf, x1, y1, x2, y2, c);
-	draw_line(buf, x2, y2, x3, y3, c);
-	draw_line(buf, x3, y3, x1, y1, c);
+void draw_triangle(fbuf *buf, vertex v1, vertex v2, vertex v3, color c) {
+	draw_line(buf, v1, v2, c);
+	draw_line(buf, v2, v3, c);
+	draw_line(buf, v3, v1, c);
 
-	int xbl = min3(x1, x2, x3);
-	int xbm = max3(x1, x2, x3);
-	int ybl = min3(y1, y2, y3);
-	int ybm = max3(y1, y2, y3);
+	int xbl = min3(v1.x, v2.x, v3.x);
+	int xbm = max3(v1.x, v2.x, v3.x);
+	int ybl = min3(v1.y, v2.y, v3.y);
+	int ybm = max3(v1.y, v2.y, v3.y);
 
 	int d1 = 0, d2 = 0, d3 = 0;
 	for (int row = ybl; row <= ybm; row++) {
 		for (int col = xbl; col <= xbm; col++) {
-			d1 = sign(x1, y1, x2, y2, col, row);
-			d2 = sign(x2, y2, x3, y3, col, row);
-			d3 = sign(x3, y3, x1, y1, col, row);
+			d1 = sign(v1.x, v1.y, v2.x, v2.y, col, row);
+			d2 = sign(v2.x, v2.y, v3.x, v3.y, col, row);
+			d3 = sign(v3.x, v3.y, v1.x, v1.y, col, row);
 			if ((d1 > 0 && d2 > 0 && d3 > 0) || (d1 < 0 && d2 < 0 && d3 < 0)) {
-				draw_pixel(buf, col, row, c);
+				vertex p = {col, row};
+				draw_pixel(buf, p, c);
 			}
 		}
 	}
