@@ -1,17 +1,15 @@
 #include "framebuffer.h"
 #include "helper.h"
 
-#define SCALE 10
-
 void init_framebuffer(fbuf *buf, int bufwidth, int bufheight) {
 	SDL_Init(SDL_INIT_VIDEO);
 
-	buf->width = bufwidth * SCALE;
-	buf->height = bufheight * SCALE;
+	buf->width = bufwidth;
+	buf->height = bufheight;
 
 	buf->window =
 	    SDL_CreateWindow("rasterizer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, buf->width, buf->height, 0);
-	buf->renderer = SDL_CreateRenderer(buf->window, -1, 0);
+	buf->renderer = SDL_CreateRenderer(buf->window, -1, SDL_RENDERER_SOFTWARE);
 
 	clear_framebuffer(buf);
 }
@@ -25,8 +23,7 @@ void draw_pixel(fbuf *buf, vertex v, color c) {
 	}
 
 	SDL_SetRenderDrawColor(buf->renderer, c.r, c.g, c.b, 255);
-	SDL_Rect rect = {v.x * SCALE, v.y * SCALE, SCALE, SCALE};
-	SDL_RenderFillRect(buf->renderer, &rect);
+	SDL_RenderDrawPoint(buf->renderer, v.x, v.y);
 }
 
 void draw_line(fbuf *buf, vertex v1, vertex v2, color c) {

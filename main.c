@@ -1,4 +1,5 @@
 #include "framebuffer.h"
+#include "model.h"
 
 fbuf buf;
 
@@ -7,14 +8,14 @@ color green = {0, 255, 0};
 color blue = {0, 0, 255};
 color white = {255, 255, 255};
 
-int main() {
-	init_framebuffer(&buf, 128, 96);
+int main(int argc, char *argv[]) {
+	init_framebuffer(&buf, 1280, 1100);
 
-	vertex a = {5, 5};
-	vertex b = {120, 43};
-	vertex c = {48, 90};
-	draw_triangle(&buf, a, b, c, green);
-	render(&buf);
+	model m;
+	load_model(&m, argv[1], buf.width, buf.height);
+	clear_framebuffer(&buf);
+	render_model(&buf, &m);
+	close_model(&m);
 
 	SDL_Event e;
 	int running = 1;
