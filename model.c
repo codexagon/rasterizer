@@ -63,6 +63,11 @@ void render_model(fbuf *buf, model *m) {
 		vertex v1 = m->vertices[m->faces[i][0] - 1];
 		vertex v2 = m->vertices[m->faces[i][1] - 1];
 		vertex v3 = m->vertices[m->faces[i][2] - 1];
+
+		int facing_towards = ((v3.x - v1.x) * (v2.y - v1.y)) - ((v2.x - v1.x) * (v3.y - v1.y));
+		if (facing_towards < 0) {
+			continue;
+		}
 		draw_triangle(buf, v1, v2, v3, rc);
 	}
 	render(buf);
