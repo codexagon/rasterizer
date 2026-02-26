@@ -26,6 +26,6 @@ int max3(int a, int b, int c) {
 	return max;
 }
 
-int sign(int ax, int ay, int bx, int by, int px, int py) {
-	return (bx - ax) * (py - ay) - (by - ay) * (px - ax);
+float signed_area(int ax, int ay, int bx, int by, int cx, int cy) {
+	return 0.5 * ((by - ay) * (bx + ax) + (cy - by) * (cx + bx) + (ay - cy) * (ax + cx));
 }

@@ -9,6 +9,7 @@ color blue = {0, 0, 255};
 color white = {255, 255, 255};
 
 int main(int argc, char *argv[]) {
+	if (argc != 2) return 1;
 	init_framebuffer(&buf, 1280, 1100);
 
 	model m;

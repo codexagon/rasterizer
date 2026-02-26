@@ -3,6 +3,6 @@
 
 int min3(int a, int b, int c);
 int max3(int a, int b, int c);
-int sign(int ax, int ay, int bx, int by, int px, int py);
+float signed_area(int ax, int ay, int bx, int by, int cx, int cy);
 
 #endif

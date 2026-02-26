@@ -17,7 +17,7 @@ void load_model(model *m, char *file, int w, int h) {
 	}
 
 	char buffer[256];
-	float x, y;
+	float x, y, z;
 
 	while (fgets(buffer, sizeof(buffer), model_file) != NULL) {
 		if (buffer[0] == 'v') {
@@ -29,8 +29,9 @@ void load_model(model *m, char *file, int w, int h) {
 					exit(1);
 				}
 			}
-			sscanf(buffer, "v %f %f %*f", &x, &y);
-			(m->vertices)[m->vcount - 1] = (vertex){(int)((x + 1) * w) >> 1, (int)((1 - y) * h) >> 1};
+			sscanf(buffer, "v %f %f %f", &x, &y, &z);
+			(m->vertices)[m->vcount - 1] =
+			    (vertex){(int)((x + 1) * w) >> 1, (int)((1 - y) * h) >> 1, (int)((z + 1) * w) >> 1};
 			(m->vcount)++;
 		} else if (buffer[0] == 'f') {
 			if (m->fcount >= m->fcap) {

@@ -46,7 +46,7 @@ void draw_line(fbuf *buf, vertex v1, vertex v2, color c) {
 
 	int x = v1.x, y = v1.y;
 	while (1) {
-		draw_pixel(buf, (vertex){x, y}, c);
+		draw_pixel(buf, (vertex){x, y, v1.z}, c);
 		if (x == v2.x && y == v2.y)
 			break;
 		if (base == 0) {
@@ -68,24 +68,29 @@ void draw_line(fbuf *buf, vertex v1, vertex v2, color c) {
 }
 
 void draw_triangle(fbuf *buf, vertex v1, vertex v2, vertex v3, color c) {
-	draw_line(buf, v1, v2, c);
-	draw_line(buf, v2, v3, c);
-	draw_line(buf, v3, v1, c);
-
 	int xbl = min3(v1.x, v2.x, v3.x);
 	int xbm = max3(v1.x, v2.x, v3.x);
 	int ybl = min3(v1.y, v2.y, v3.y);
 	int ybm = max3(v1.y, v2.y, v3.y);
 
-	int d1 = 0, d2 = 0, d3 = 0;
+	int a1, a2, a3, a4 = signed_area(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
+	float alpha = 0, beta = 0, gamma = 0;
+
+	int tz;
 	for (int row = ybl; row <= ybm; row++) {
 		for (int col = xbl; col <= xbm; col++) {
-			d1 = sign(v1.x, v1.y, v2.x, v2.y, col, row);
-			d2 = sign(v2.x, v2.y, v3.x, v3.y, col, row);
-			d3 = sign(v3.x, v3.y, v1.x, v1.y, col, row);
-			if ((d1 > 0 && d2 > 0 && d3 > 0) || (d1 < 0 && d2 < 0 && d3 < 0)) {
-				vertex p = {col, row};
-				draw_pixel(buf, p, c);
+			a1 = signed_area(col, row, v2.x, v2.y, v3.x, v3.y);
+			a2 = signed_area(col, row, v3.x, v3.y, v1.x, v1.y);
+			a3 = signed_area(col, row, v1.x, v1.y, v2.x, v2.y);
+
+			alpha = (float)a1 / a4;
+			beta = (float)a2 / a4;
+			gamma = (float)a3 / a4;
+			if ((alpha >= 0 && beta >= 0 && gamma >= 0)) {
+				tz = (int)(alpha * v1.z + beta * v2.z + gamma * v3.z);
+				vertex p = {col, row, tz};
+				draw_pixel(buf, p, (color){tz, tz, tz});
+				// draw_pixel(buf, p, c);
 			}
 		}
 	}
