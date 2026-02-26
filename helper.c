@@ -1,10 +1,10 @@
-#include "limits.h"
+#include <float.h>
 
 #include "helper.h"
 
-int min3(int a, int b, int c) {
-	int min = INT_MAX;
-	int nums[3] = {a, b, c};
+float min3(float a, float b, float c) {
+	float min = FLT_MAX;
+	float nums[3] = {a, b, c};
 	for (int i = 0; i < 3; i++) {
 		if (nums[i] < min) {
 			min = nums[i];
@@ -14,9 +14,9 @@ int min3(int a, int b, int c) {
 	return min;
 }
 
-int max3(int a, int b, int c) {
-	int max = INT_MIN;
-	int nums[3] = {a, b, c};
+float max3(float a, float b, float c) {
+	float max = FLT_MIN;
+	float nums[3] = {a, b, c};
 	for (int i = 0; i < 3; i++) {
 		if (nums[i] > max) {
 			max = nums[i];
@@ -26,6 +26,6 @@ int max3(int a, int b, int c) {
 	return max;
 }
 
-float signed_area(int ax, int ay, int bx, int by, int cx, int cy) {
-	return 0.5 * ((by - ay) * (bx + ax) + (cy - by) * (cx + bx) + (ay - cy) * (ax + cx));
+float signed_area(float ax, float ay, float bx, float by, float cx, float cy) {
+	return (cx - ax) * (by - ay) - (cy - ay) * (bx - ax);
 }

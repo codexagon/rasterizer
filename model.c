@@ -30,8 +30,11 @@ void load_model(model *m, char *file, int w, int h) {
 				}
 			}
 			sscanf(buffer, "v %f %f %f", &x, &y, &z);
-			(m->vertices)[m->vcount - 1] =
-			    (vertex){(int)((x + 1) * w) >> 1, (int)((1 - y) * h) >> 1, (int)((z + 1) * w) >> 1};
+			(m->vertices)[m->vcount - 1] = (vertex){
+				((x + 1) * w) / 2,
+				((1 - y) * h) / 2,
+				((z + 1) * 127) + 1.0f
+			};
 			(m->vcount)++;
 		} else if (buffer[0] == 'f') {
 			if (m->fcount >= m->fcap) {

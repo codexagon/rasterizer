@@ -14,7 +14,7 @@ typedef struct color {
 } color;
 
 typedef struct vertex {
-	int x, y, z;
+	float x, y, z;
 } vertex;
 
 void init_framebuffer(fbuf *buf, int bufwidth, int bufheight);

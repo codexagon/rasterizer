@@ -27,8 +27,8 @@ void draw_pixel(fbuf *buf, vertex v, color c) {
 }
 
 void draw_line(fbuf *buf, vertex v1, vertex v2, color c) {
-	int dx = v2.x - v1.x, sx = 1;
-	int dy = v2.y - v1.y, sy = 1;
+	float dx = v2.x - v1.x, sx = 1;
+	float dy = v2.y - v1.y, sy = 1;
 
 	if (v2.x < v1.x) {
 		dx = v1.x - v2.x;
@@ -41,10 +41,10 @@ void draw_line(fbuf *buf, vertex v1, vertex v2, color c) {
 
 	int e = 0;
 	int base = (dy > dx) ? 1 : 0;
-	int parl = (dy > dx) ? dy : dx;
-	int perp = (dy > dx) ? dx : dy;
+	float parl = (dy > dx) ? dy : dx;
+	float perp = (dy > dx) ? dx : dy;
 
-	int x = v1.x, y = v1.y;
+	float x = v1.x, y = v1.y;
 	while (1) {
 		draw_pixel(buf, (vertex){x, y, v1.z}, c);
 		if (x == v2.x && y == v2.y)
@@ -55,41 +55,42 @@ void draw_line(fbuf *buf, vertex v1, vertex v2, color c) {
 			y += sy;
 		}
 
-		e += perp << 1;
+		e += perp / 2;
 		if (e >= parl) {
 			if (base == 0) {
 				y += sy;
 			} else {
 				x += sx;
 			}
-			e -= parl << 1;
+			e -= parl / 2;
 		}
 	}
 }
 
 void draw_triangle(fbuf *buf, vertex v1, vertex v2, vertex v3, color c) {
-	int xbl = min3(v1.x, v2.x, v3.x);
-	int xbm = max3(v1.x, v2.x, v3.x);
-	int ybl = min3(v1.y, v2.y, v3.y);
-	int ybm = max3(v1.y, v2.y, v3.y);
+	float xbl = min3(v1.x, v2.x, v3.x);
+	float xbm = max3(v1.x, v2.x, v3.x);
+	float ybl = min3(v1.y, v2.y, v3.y);
+	float ybm = max3(v1.y, v2.y, v3.y);
 
-	int a1, a2, a3, a4 = signed_area(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
+	float a1, a2, a3;
+	float a4 = signed_area(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
 	float alpha = 0, beta = 0, gamma = 0;
 
-	int tz;
-	for (int row = ybl; row <= ybm; row++) {
-		for (int col = xbl; col <= xbm; col++) {
-			a1 = signed_area(col, row, v2.x, v2.y, v3.x, v3.y);
-			a2 = signed_area(col, row, v3.x, v3.y, v1.x, v1.y);
-			a3 = signed_area(col, row, v1.x, v1.y, v2.x, v2.y);
+	int z, idx;
+	for (int y = (int)ybl; y <= (int)ybm; y++) {
+		for (int x = (int)xbl; x <= (int)xbm; x++) {
+			a1 = signed_area((float)x, (float)y, v2.x, v2.y, v3.x, v3.y);
+			a2 = signed_area((float)x, (float)y, v3.x, v3.y, v1.x, v1.y);
+			a3 = signed_area((float)x, (float)y, v1.x, v1.y, v2.x, v2.y);
 
 			alpha = (float)a1 / a4;
 			beta = (float)a2 / a4;
 			gamma = (float)a3 / a4;
 			if ((alpha >= 0 && beta >= 0 && gamma >= 0)) {
-				tz = (int)(alpha * v1.z + beta * v2.z + gamma * v3.z);
-				vertex p = {col, row, tz};
-				draw_pixel(buf, p, (color){tz, tz, tz});
+				z = (int)(alpha * v1.z + beta * v2.z + gamma * v3.z);
+				vertex p = {x, y, z};
+				draw_pixel(buf, p, (color){(int)z, (int)z, (int)z});
 				// draw_pixel(buf, p, c);
 			}
 		}

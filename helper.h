@@ -1,8 +1,8 @@
 #ifndef HELPER_H
 #define HELPER_H
 
-int min3(int a, int b, int c);
-int max3(int a, int b, int c);
-float signed_area(int ax, int ay, int bx, int by, int cx, int cy);
+float min3(float a, float b, float c);
+float max3(float a, float b, float c);
+float signed_area(float ax, float ay, float bx, float by, float cx, float cy);
 
 #endif
