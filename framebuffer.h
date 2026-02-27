@@ -18,10 +18,6 @@ typedef struct vertex {
 } vertex;
 
 void init_framebuffer(fbuf *buf, int bufwidth, int bufheight);
-void draw_pixel(fbuf *buf, vertex v, color c);
-void draw_line(fbuf *buf, vertex v1, vertex v2, color c);
-void draw_triangle(fbuf *buf, vertex v1, vertex v2, vertex v3, color c);
-void render(fbuf *buf);
 void clear_framebuffer(fbuf *buf);
 void quit_framebuffer(fbuf *buf);
 

@@ -3,7 +3,7 @@
 
 #include "model.h"
 
-void load_model(model *m, char *file, int w, int h) {
+void load_model(model *m, char *file) {
 	FILE *model_file = fopen(file, "r");
 
 	m->vcap = 128;
@@ -30,11 +30,7 @@ void load_model(model *m, char *file, int w, int h) {
 				}
 			}
 			sscanf(buffer, "v %f %f %f", &x, &y, &z);
-			(m->vertices)[m->vcount - 1] = (vertex){
-				((x + 1) * w) / 2,
-				((1 - y) * h) / 2,
-				((z + 1) * 127) + 1.0f
-			};
+			(m->vertices)[m->vcount - 1] = (vertex){x, y, z};
 			(m->vcount)++;
 		} else if (buffer[0] == 'f') {
 			if (m->fcount >= m->fcap) {
@@ -57,24 +53,18 @@ void load_model(model *m, char *file, int w, int h) {
 	fclose(model_file);
 }
 
-void render_model(fbuf *buf, model *m) {
-	color rc;
-
-	for (int i = 0; i < m->fcount; i++) {
-		rc.r = rand() % (255 - 0 + 1) + 0;
-		rc.g = rand() % (255 - 0 + 1) + 0;
-		rc.b = rand() % (255 - 0 + 1) + 0;
-		vertex v1 = m->vertices[m->faces[i][0] - 1];
-		vertex v2 = m->vertices[m->faces[i][1] - 1];
-		vertex v3 = m->vertices[m->faces[i][2] - 1];
-
-		int facing_towards = ((v3.x - v1.x) * (v2.y - v1.y)) - ((v2.x - v1.x) * (v3.y - v1.y));
-		if (facing_towards < 0) {
-			continue;
-		}
-		draw_triangle(buf, v1, v2, v3, rc);
+void viewport_transform(fbuf *buf, model *m) {
+	float x, y, z;
+	for (int i = 0; i < m->vcount; i++) {
+		x = (m->vertices)[i].x;
+		y = (m->vertices)[i].y;
+		z = (m->vertices)[i].z;
+		(m->vertices)[i] = (vertex){
+			((x + 1) * buf->width) / 2,
+			((1 - y) * buf->height) / 2,
+			((z + 1) * 127) + 1.0f
+		};
 	}
-	render(buf);
 }
 
 void close_model(model *m) {

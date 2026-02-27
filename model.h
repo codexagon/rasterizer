@@ -10,8 +10,9 @@ typedef struct model {
 	int fcount, fcap;
 } model;
 
-void load_model(model *m, char *file, int w, int h);
+void load_model(model *m, char *file);
 void render_model(fbuf *buf, model *m);
+void viewport_transform(fbuf *buf, model *m);
 void close_model(model *m);
 
 #endif

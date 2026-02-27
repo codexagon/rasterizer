@@ -1,5 +1,6 @@
 #include "framebuffer.h"
 #include "model.h"
+#include "drawing.h"
 
 fbuf buf;
 
@@ -13,7 +14,7 @@ int main(int argc, char *argv[]) {
 	init_framebuffer(&buf, 1280, 1100);
 
 	model m;
-	load_model(&m, argv[1], buf.width, buf.height);
+	load_model(&m, argv[1]);
 	clear_framebuffer(&buf);
 	render_model(&buf, &m);
 	close_model(&m);
