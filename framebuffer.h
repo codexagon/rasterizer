@@ -7,6 +7,7 @@ typedef struct framebuffer {
 	int width, height;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
+	float *zbuf;
 } fbuf;
 
 typedef struct color {

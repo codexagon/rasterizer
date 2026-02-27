@@ -64,21 +64,26 @@ void draw_triangle(fbuf *buf, vertex v1, vertex v2, vertex v3, color c) {
 	float a4 = signed_area(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
 	float alpha = 0, beta = 0, gamma = 0;
 
-	int z;
+	float z;
+	int idx;
 	for (int y = (int)ybl; y <= (int)ybm; y++) {
 		for (int x = (int)xbl; x <= (int)xbm; x++) {
 			a1 = signed_area((float)x, (float)y, v2.x, v2.y, v3.x, v3.y);
 			a2 = signed_area((float)x, (float)y, v3.x, v3.y, v1.x, v1.y);
 			a3 = signed_area((float)x, (float)y, v1.x, v1.y, v2.x, v2.y);
 
-			alpha = (float)a1 / a4;
-			beta = (float)a2 / a4;
-			gamma = (float)a3 / a4;
+			alpha = a1 / a4;
+			beta = a2 / a4;
+			gamma = a3 / a4;
 			if ((alpha >= 0 && beta >= 0 && gamma >= 0)) {
-				z = (int)(alpha * v1.z + beta * v2.z + gamma * v3.z);
-				vertex p = {x, y, z};
-				draw_pixel(buf, p, (color){(int)z, (int)z, (int)z});
-				// draw_pixel(buf, p, c);
+				z = alpha * v1.z + beta * v2.z + gamma * v3.z;
+				idx = (int)(y * buf->width + x);
+				if (z > (buf->zbuf)[idx]) {
+					(buf->zbuf)[idx] = z;
+					vertex p = {x, y, z};
+					draw_pixel(buf, p, (color){z, z, z});
+					// draw_pixel(buf, p, c);
+				}
 			}
 		}
 	}
