@@ -1,6 +1,6 @@
-#include "framebuffer.h"
-#include "model.h"
-#include "drawing.h"
+#include "../include/framebuffer.h"
+#include "../include/model.h"
+#include "../include/drawing.h"
 
 fbuf buf;
 

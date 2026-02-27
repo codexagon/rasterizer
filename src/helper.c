@@ -1,6 +1,6 @@
 #include <float.h>
 
-#include "helper.h"
+#include "../include/helper.h"
 
 float min3(float a, float b, float c) {
 	float min = FLT_MAX;

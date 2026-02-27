@@ -1,5 +1,5 @@
-#include "drawing.h"
-#include "helper.h"
+#include "../include/drawing.h"
+#include "../include/helper.h"
 
 void draw_pixel(fbuf *buf, vertex v, color c) {
 	if (v.x < 0 || v.x >= buf->width) {

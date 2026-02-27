@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "model.h"
+#include "../include/model.h"
 
 void load_model(model *m, char *file) {
 	FILE *model_file = fopen(file, "r");

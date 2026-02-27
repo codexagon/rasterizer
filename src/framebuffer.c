@@ -1,4 +1,4 @@
-#include "framebuffer.h"
+#include "../include/framebuffer.h"
 
 void init_framebuffer(fbuf *buf, int bufwidth, int bufheight) {
 	SDL_Init(SDL_INIT_VIDEO);
