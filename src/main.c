@@ -3,11 +3,6 @@
 
 fbuf buf;
 
-color red = {255, 0, 0};
-color green = {0, 255, 0};
-color blue = {0, 0, 255};
-color white = {255, 255, 255};
-
 int main(int argc, char *argv[]) {
 	if (argc != 2) return 1;
 	init_framebuffer(&buf, 1000, 1000);
@@ -23,6 +18,7 @@ int main(int argc, char *argv[]) {
 		rotate_transform(&m, gamma, beta, alpha);
 		viewport_transform(&buf, &m);
 		render_model(&buf, &m);
+		render_framebuffer(&buf);
 
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
@@ -33,6 +29,7 @@ int main(int argc, char *argv[]) {
 					case SDLK_LEFT: beta -= 5; break;
 					case SDLK_UP: gamma += 5; break;
 					case SDLK_DOWN: gamma -= 5; break;
+					case SDLK_q: running = 0;
 				}
 			}
 		}
