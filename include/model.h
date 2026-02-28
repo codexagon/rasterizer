@@ -6,6 +6,7 @@
 
 typedef struct model {
 	vec3 *vertices;
+	vec3 *transformed_vertices;
 	int vcount, vcap;
 	int **faces;
 	int fcount, fcap;

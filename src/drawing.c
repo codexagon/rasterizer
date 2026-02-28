@@ -1,6 +1,5 @@
 #include "../include/drawing.h"
 #include "../include/helper.h"
-#include "../include/rmath.h"
 
 void draw_pixel(fbuf *buf, vec3 v, color c) {
 	if (v.x < 0 || v.x >= buf->width) {
@@ -98,16 +97,13 @@ void draw_triangle(fbuf *buf, vec3 v1, vec3 v2, vec3 v3, color c) {
 void render_model(fbuf *buf, model *m) {
 	color rc;
 
-	rotate_transform(m, 10, 10, 0);
-	viewport_transform(buf, m);
-
 	for (int i = 0; i < m->fcount; i++) {
 		rc.r = rand() % (255 - 0 + 1) + 0;
 		rc.g = rand() % (255 - 0 + 1) + 0;
 		rc.b = rand() % (255 - 0 + 1) + 0;
-		vec3 v1 = m->vertices[m->faces[i][0] - 1];
-		vec3 v2 = m->vertices[m->faces[i][1] - 1];
-		vec3 v3 = m->vertices[m->faces[i][2] - 1];
+		vec3 v1 = m->transformed_vertices[m->faces[i][0] - 1];
+		vec3 v2 = m->transformed_vertices[m->faces[i][1] - 1];
+		vec3 v3 = m->transformed_vertices[m->faces[i][2] - 1];
 
 		int facing_towards = ((v3.x - v1.x) * (v2.y - v1.y)) - ((v2.x - v1.x) * (v3.y - v1.y));
 		if (facing_towards < 0) {
