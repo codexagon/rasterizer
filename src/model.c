@@ -10,7 +10,7 @@ void load_model(model *m, char *file) {
 	m->vcount = 1;
 	m->fcap = 2;
 	m->fcount = 0;
-	m->vertices = malloc((m->vcap) * sizeof(vertex));
+	m->vertices = malloc((m->vcap) * sizeof(vec3));
 	m->faces = malloc((m->fcap) * sizeof(int *));
 	for (int i = 0; i < m->fcap; i++) {
 		(m->faces)[i] = malloc(3 * sizeof(int));
@@ -23,14 +23,14 @@ void load_model(model *m, char *file) {
 		if (buffer[0] == 'v') {
 			if (m->vcount >= m->vcap) {
 				m->vcap <<= 1;
-				m->vertices = realloc(m->vertices, (m->vcap) * sizeof(vertex));
+				m->vertices = realloc(m->vertices, (m->vcap) * sizeof(vec3));
 				if (m->vertices == NULL) {
 					fprintf(stderr, "Vertex array reallocation failed.\n");
 					exit(1);
 				}
 			}
 			sscanf(buffer, "v %f %f %f", &x, &y, &z);
-			(m->vertices)[m->vcount - 1] = (vertex){x, y, z};
+			(m->vertices)[m->vcount - 1] = (vec3){x, y, z};
 			(m->vcount)++;
 		} else if (buffer[0] == 'f') {
 			if (m->fcount >= m->fcap) {
@@ -53,13 +53,19 @@ void load_model(model *m, char *file) {
 	fclose(model_file);
 }
 
+void rotate_transform(model *m, float c, float b, float a) {
+	for (int i = 0; i < m->vcount; i++) {
+		(m->vertices)[i] = vrot3((m->vertices)[i], c, b, a);
+	}
+}
+
 void viewport_transform(fbuf *buf, model *m) {
 	float x, y, z;
 	for (int i = 0; i < m->vcount; i++) {
 		x = (m->vertices)[i].x;
 		y = (m->vertices)[i].y;
 		z = (m->vertices)[i].z;
-		(m->vertices)[i] = (vertex){
+		(m->vertices)[i] = (vec3){
 			((x + 1) * buf->width) / 2,
 			((1 - y) * buf->height) / 2,
 			((z + 1) * 127) + 1.0f

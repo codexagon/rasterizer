@@ -1,7 +1,8 @@
 #include "../include/drawing.h"
 #include "../include/helper.h"
+#include "../include/rmath.h"
 
-void draw_pixel(fbuf *buf, vertex v, color c) {
+void draw_pixel(fbuf *buf, vec3 v, color c) {
 	if (v.x < 0 || v.x >= buf->width) {
 		return;
 	}
@@ -13,7 +14,7 @@ void draw_pixel(fbuf *buf, vertex v, color c) {
 	SDL_RenderDrawPoint(buf->renderer, v.x, v.y);
 }
 
-void draw_line(fbuf *buf, vertex v1, vertex v2, color c) {
+void draw_line(fbuf *buf, vec3 v1, vec3 v2, color c) {
 	float dx = v2.x - v1.x, sx = 1;
 	float dy = v2.y - v1.y, sy = 1;
 
@@ -33,7 +34,7 @@ void draw_line(fbuf *buf, vertex v1, vertex v2, color c) {
 
 	float x = v1.x, y = v1.y;
 	while (1) {
-		draw_pixel(buf, (vertex){x, y, v1.z}, c);
+		draw_pixel(buf, (vec3){x, y, v1.z}, c);
 		if (x == v2.x && y == v2.y)
 			break;
 		if (base == 0) {
@@ -54,11 +55,16 @@ void draw_line(fbuf *buf, vertex v1, vertex v2, color c) {
 	}
 }
 
-void draw_triangle(fbuf *buf, vertex v1, vertex v2, vertex v3, color c) {
+void draw_triangle(fbuf *buf, vec3 v1, vec3 v2, vec3 v3, color c) {
 	float xbl = min3(v1.x, v2.x, v3.x);
 	float xbm = max3(v1.x, v2.x, v3.x);
 	float ybl = min3(v1.y, v2.y, v3.y);
 	float ybm = max3(v1.y, v2.y, v3.y);
+
+	if (xbl < 0) xbl = 0;
+	if (ybl < 0) ybl = 0;
+	if (xbm > buf->width) xbm = buf->width - 1;
+	if (ybm > buf->height) ybm = buf->height - 1;
 
 	float a1, a2, a3;
 	float a4 = signed_area(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
@@ -80,7 +86,7 @@ void draw_triangle(fbuf *buf, vertex v1, vertex v2, vertex v3, color c) {
 				idx = (int)(y * buf->width + x);
 				if (z > (buf->zbuf)[idx]) {
 					(buf->zbuf)[idx] = z;
-					vertex p = {x, y, z};
+					vec3 p = {x, y, z};
 					draw_pixel(buf, p, (color){z, z, z});
 					// draw_pixel(buf, p, c);
 				}
@@ -92,14 +98,16 @@ void draw_triangle(fbuf *buf, vertex v1, vertex v2, vertex v3, color c) {
 void render_model(fbuf *buf, model *m) {
 	color rc;
 
+	rotate_transform(m, 10, 10, 0);
 	viewport_transform(buf, m);
+
 	for (int i = 0; i < m->fcount; i++) {
 		rc.r = rand() % (255 - 0 + 1) + 0;
 		rc.g = rand() % (255 - 0 + 1) + 0;
 		rc.b = rand() % (255 - 0 + 1) + 0;
-		vertex v1 = m->vertices[m->faces[i][0] - 1];
-		vertex v2 = m->vertices[m->faces[i][1] - 1];
-		vertex v3 = m->vertices[m->faces[i][2] - 1];
+		vec3 v1 = m->vertices[m->faces[i][0] - 1];
+		vec3 v2 = m->vertices[m->faces[i][1] - 1];
+		vec3 v3 = m->vertices[m->faces[i][2] - 1];
 
 		int facing_towards = ((v3.x - v1.x) * (v2.y - v1.y)) - ((v2.x - v1.x) * (v3.y - v1.y));
 		if (facing_towards < 0) {

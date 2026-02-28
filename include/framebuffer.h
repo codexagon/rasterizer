@@ -14,10 +14,6 @@ typedef struct color {
 	uint8_t r, g, b;
 } color;
 
-typedef struct vertex {
-	float x, y, z;
-} vertex;
-
 void init_framebuffer(fbuf *buf, int bufwidth, int bufheight);
 void clear_framebuffer(fbuf *buf);
 void quit_framebuffer(fbuf *buf);
