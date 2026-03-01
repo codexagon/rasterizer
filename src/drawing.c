@@ -1,7 +1,7 @@
 #include "../include/drawing.h"
 #include "../include/helper.h"
 
-void draw_line(fbuf *buf, vec3 v1, vec3 v2, color c) {
+void draw_line(fbuf *buf, vec4 v1, vec4 v2, color c) {
 	float dx = v2.x - v1.x, sx = 1;
 	float dy = v2.y - v1.y, sy = 1;
 
@@ -42,7 +42,7 @@ void draw_line(fbuf *buf, vec3 v1, vec3 v2, color c) {
 	}
 }
 
-void draw_triangle(fbuf *buf, vec3 v1, vec3 v2, vec3 v3, color c) {
+void draw_triangle(fbuf *buf, vec4 v1, vec4 v2, vec4 v3, color c) {
 	float xbl = min3(v1.x, v2.x, v3.x);
 	float xbm = max3(v1.x, v2.x, v3.x);
 	float ybl = min3(v1.y, v2.y, v3.y);
@@ -83,9 +83,9 @@ void draw_triangle(fbuf *buf, vec3 v1, vec3 v2, vec3 v3, color c) {
 
 void render_model(fbuf *buf, model *m) {
 	for (int i = 0; i < m->fcount; i++) {
-		vec3 v1 = m->transformed_vertices[m->faces[i][0] - 1];
-		vec3 v2 = m->transformed_vertices[m->faces[i][1] - 1];
-		vec3 v3 = m->transformed_vertices[m->faces[i][2] - 1];
+		vec4 v1 = m->transformed_vertices[m->faces[i][0] - 1];
+		vec4 v2 = m->transformed_vertices[m->faces[i][1] - 1];
+		vec4 v3 = m->transformed_vertices[m->faces[i][2] - 1];
 
 		int facing_towards = ((v3.x - v1.x) * (v2.y - v1.y)) - ((v2.x - v1.x) * (v3.y - v1.y));
 		if (facing_towards < 0) {

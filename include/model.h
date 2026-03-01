@@ -5,19 +5,19 @@
 #include "rmath.h"
 
 typedef struct model {
-	vec3 *vertices;
-	vec3 *transformed_vertices;
+	vec4 *vertices;
+	vec4 *transformed_vertices;
 	int vcount, vcap;
 	int **faces;
 	int fcount, fcap;
 } model;
 
 void load_model(model *m, char *file);
-void render_model(fbuf *buf, model *m);
-void rotate_transform(model *m, float c, float b, float a);
-void scale_transform(model *m, float k);
-void perspective_transform(model *m);
-void viewport_transform(fbuf *buf, model *m);
+void apply_transforms(model *m, mat4 *matrices, int n, mat4 viewport);
+mat4 get_rotation_matrix(float c, float b, float a);
+mat4 get_scale_matrix(float k);
+mat4 get_perspective_matrix(float fov);
+mat4 get_viewport_matrix(fbuf *buf);
 void close_model(model *m);
 
 #endif

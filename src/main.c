@@ -1,3 +1,4 @@
+#include "../include/drawing.h"
 #include "../include/framebuffer.h"
 #include "../include/model.h"
 
@@ -12,14 +13,25 @@ int main(int argc, char *argv[]) {
 	float alpha = 0.0f, beta = 0.0f, gamma = 0.0f;
 	float zoom = 1.0f;
 
+	mat4 transformations[3];
+
 	SDL_Event e;
 	int running = 1;
 	while (running == 1) {
 		clear_framebuffer(&buf);
-		rotate_transform(&m, gamma, beta, alpha);
-		scale_transform(&m, zoom);
-		perspective_transform(&m);
-		viewport_transform(&buf, &m);
+		for (int i = 0; i < 3; i++) {
+			transformations[i] = (mat4){
+				.vals[0] = {1, 0, 0, 0},
+				.vals[1] = {0, 1, 0, 0},
+				.vals[2] = {0, 0, 1, 0},
+				.vals[3] = {0, 0, 0, 1}
+			};
+		}
+		transformations[0] = get_perspective_matrix(4.0f);
+		transformations[1] = get_scale_matrix(zoom);
+		transformations[2] = get_rotation_matrix(gamma, beta, alpha);
+		mat4 viewport = get_viewport_matrix(&buf);
+		apply_transforms(&m, transformations, 3, viewport);
 		render_model(&buf, &m);
 		render_framebuffer(&buf);
 

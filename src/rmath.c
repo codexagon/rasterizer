@@ -1,23 +1,31 @@
 #include "../include/rmath.h"
 
-#include <math.h>
-
-vec3 vrot3(vec3 v, float c, float b, float a) {
-	// c: x axis, b: y axis, a: z axis
-	vec3 new;
-	float ar = 0.01745329 * a;
-	float br = 0.01745329 * b;
-	float cr = 0.01745329 * c;
-	new.x = v.x * (cos(br) * cos(ar)) - v.y * (cos(br) * sin(ar)) + v.z * (sin(br));
-	new.y = v.x * (sin(cr) * sin(br) * cos(ar) + cos(cr) * sin(ar)) + v.y * (cos(cr) * cos(ar) - sin(cr) * sin(br) * sin(ar)) - v.z * (sin(cr) * cos(br));
-	new.z = v.x * (sin(cr) * sin(ar) - cos(cr) * sin(br) * cos(ar)) + v.y * (cos(cr) * sin(br) * sin(ar) + sin(cr) * cos(ar)) + v.z * (cos(cr) * cos(br));
-	return new;
-}
-
-vec3 scale(vec3 v, float scalar) {
-	vec3 new;
+vec4 scale(vec4 v, float scalar) {
+	vec4 new;
 	new.x = v.x * scalar;
 	new.y = v.y * scalar;
 	new.z = v.z * scalar;
+	new.w = v.w * scalar;
 	return new;
+}
+
+mat4 mprod4(mat4 m1, mat4 m2) {
+	mat4 product = {0};
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			for (int k = 0; k < 4; k++) {
+				(product.vals)[i][j] += (m1.vals)[i][k] * (m2.vals)[k][j];
+			}
+		}
+	}
+
+	return product;
+}
+
+vec4 transform(vec4 v, mat4 m) {
+	return (vec4){(m.vals)[0][0] * v.x + (m.vals)[0][1] * v.y + (m.vals)[0][2] * v.z + (m.vals)[0][3] * v.w,
+	              (m.vals)[1][0] * v.x + (m.vals)[1][1] * v.y + (m.vals)[1][2] * v.z + (m.vals)[1][3] * v.w,
+	              (m.vals)[2][0] * v.x + (m.vals)[2][1] * v.y + (m.vals)[2][2] * v.z + (m.vals)[2][3] * v.w,
+	              (m.vals)[3][0] * v.x + (m.vals)[3][1] * v.y + (m.vals)[3][2] * v.z + (m.vals)[3][3] * v.w};
 }
