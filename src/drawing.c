@@ -70,6 +70,7 @@ void draw_triangle(fbuf *buf, vec3 v1, vec3 v2, vec3 v3, color c) {
 			gamma = a3 / a4;
 			if ((alpha >= 0 && beta >= 0 && gamma >= 0)) {
 				z = alpha * v1.z + beta * v2.z + gamma * v3.z;
+				if (z > 0xFF) z = 0xFF; // only for depth visualization, remove otherwise
 				idx = (int)(y * buf->width + x);
 				if (z > (buf->zbuf)[idx]) {
 					(buf->zbuf)[idx] = z;

@@ -62,6 +62,12 @@ void rotate_transform(model *m, float c, float b, float a) {
 	}
 }
 
+void perspective_transform(model *m) {
+	for (int i = 0; i < m->vcount; i++) {
+		(m->transformed_vertices)[i] = scale((m->transformed_vertices)[i], 1 / (1 - (m->transformed_vertices)[i].z / 4));
+	}
+}
+
 void viewport_transform(fbuf *buf, model *m) {
 	float x, y, z;
 	for (int i = 0; i < m->vcount; i++) {
@@ -71,7 +77,7 @@ void viewport_transform(fbuf *buf, model *m) {
 		(m->transformed_vertices)[i] = (vec3){
 			((x + 1) * buf->width) / 2,
 			((1 - y) * buf->height) / 2,
-			((z + 1) * 127) + 1.0f
+			((z + 1) * 255) / 2 + 1.0f
 		};
 	}
 }

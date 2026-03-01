@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
 	while (running == 1) {
 		clear_framebuffer(&buf);
 		rotate_transform(&m, gamma, beta, alpha);
+		perspective_transform(&m);
 		viewport_transform(&buf, &m);
 		render_model(&buf, &m);
 		render_framebuffer(&buf);
