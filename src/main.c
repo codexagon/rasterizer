@@ -10,12 +10,14 @@ int main(int argc, char *argv[]) {
 	model m;
 	load_model(&m, argv[1]);
 	float alpha = 0.0f, beta = 0.0f, gamma = 0.0f;
+	float zoom = 1.0f;
 
 	SDL_Event e;
 	int running = 1;
 	while (running == 1) {
 		clear_framebuffer(&buf);
 		rotate_transform(&m, gamma, beta, alpha);
+		scale_transform(&m, zoom);
 		perspective_transform(&m);
 		viewport_transform(&buf, &m);
 		render_model(&buf, &m);
@@ -30,6 +32,15 @@ int main(int argc, char *argv[]) {
 					case SDLK_LEFT: beta -= 5; break;
 					case SDLK_UP: gamma += 5; break;
 					case SDLK_DOWN: gamma -= 5; break;
+					case SDLK_KP_PLUS:
+					case SDLK_EQUALS: zoom += 0.05; break; // plus key
+					case SDLK_KP_MINUS:
+					case SDLK_MINUS: {
+						if (zoom > 0) {
+							zoom -= 0.05;
+						}
+						break;
+					}
 					case SDLK_q: running = 0;
 				}
 			}

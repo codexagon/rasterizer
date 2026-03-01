@@ -62,6 +62,12 @@ void rotate_transform(model *m, float c, float b, float a) {
 	}
 }
 
+void scale_transform(model *m, float k) {
+	for (int i = 0; i < m->vcount; i++) {
+		(m->transformed_vertices)[i] = scale((m->transformed_vertices)[i], k);
+	}
+}
+
 void perspective_transform(model *m) {
 	for (int i = 0; i < m->vcount; i++) {
 		(m->transformed_vertices)[i] = scale((m->transformed_vertices)[i], 1 / (1 - (m->transformed_vertices)[i].z / 4));
