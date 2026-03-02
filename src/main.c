@@ -44,6 +44,8 @@ int main(int argc, char *argv[]) {
 					case SDLK_LEFT: beta -= 5; break;
 					case SDLK_UP: gamma += 5; break;
 					case SDLK_DOWN: gamma -= 5; break;
+					case SDLK_o: alpha += 5; break;
+					case SDLK_p: alpha -= 5; break;
 					case SDLK_KP_PLUS:
 					case SDLK_EQUALS: zoom += 0.05; break; // plus key
 					case SDLK_KP_MINUS:
