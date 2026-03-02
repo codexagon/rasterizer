@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 	model m;
 	load_model(&m, argv[1]);
 	float alpha = 0.0f, beta = 0.0f, gamma = 0.0f;
-	float zoom = 1.0f;
+	float zoom = 1.0f, fov = 4.0f;
 
 	mat4 transformations[3];
 
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 				.vals[3] = {0, 0, 0, 1}
 			};
 		}
-		transformations[0] = get_perspective_matrix(4.0f);
+		transformations[0] = get_perspective_matrix(fov);
 		transformations[1] = get_scale_matrix(zoom);
 		transformations[2] = get_rotation_matrix(gamma, beta, alpha);
 		mat4 viewport = get_viewport_matrix(&buf);
@@ -53,6 +53,8 @@ int main(int argc, char *argv[]) {
 						}
 						break;
 					}
+					case SDLK_COMMA: fov -= 0.1f; break;
+					case SDLK_PERIOD: fov += 0.1f; break;
 					case SDLK_q: running = 0;
 				}
 			}
